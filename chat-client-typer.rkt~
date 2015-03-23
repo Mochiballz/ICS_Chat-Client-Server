@@ -1,0 +1,82 @@
+#lang racket
+
+(require racket/base)
+(require 2htdp/universe)
+(require picturing-programs)
+
+; chat-struct: text(string) -> struct
+; contains a string to be used to draw the chat box
+
+(define-struct chat-struct (text))
+(define chat (make-chat-struct ""))
+
+; key-handler: struct(struct) -> struct
+; depending on key inputs, it will create text
+
+(define (key-handler struct key)
+  (cond [(key=? key "q") 
+         (make-chat-struct (string-append (chat-struct-text struct) "q"))]
+        [(key=? key "w") 
+         (make-chat-struct (string-append (chat-struct-text struct) "w"))]
+        [(key=? key "e") 
+         (make-chat-struct (string-append (chat-struct-text struct) "e"))]
+        [(key=? key "r") 
+         (make-chat-struct (string-append (chat-struct-text struct) "r"))]
+        [(key=? key "t") 
+         (make-chat-struct (string-append (chat-struct-text struct) "t"))]
+        [(key=? key "y") 
+         (make-chat-struct (string-append (chat-struct-text struct) "y"))]
+        [(key=? key "u") 
+         (make-chat-struct (string-append (chat-struct-text struct) "u"))]
+        [(key=? key "i") 
+         (make-chat-struct (string-append (chat-struct-text struct) "i"))]
+        [(key=? key "o") 
+         (make-chat-struct (string-append (chat-struct-text struct) "o"))]
+        [(key=? key "p") 
+         (make-chat-struct (string-append (chat-struct-text struct) "p"))]
+        [(key=? key "a") 
+         (make-chat-struct (string-append (chat-struct-text struct) "a"))]
+        [(key=? key "s") 
+         (make-chat-struct (string-append (chat-struct-text struct) "s"))]
+        [(key=? key "d") 
+         (make-chat-struct (string-append (chat-struct-text struct) "d"))]
+        [(key=? key "f") 
+         (make-chat-struct (string-append (chat-struct-text struct) "f"))]
+        [(key=? key "g") 
+         (make-chat-struct (string-append (chat-struct-text struct) "g"))]
+        [(key=? key "h") 
+         (make-chat-struct (string-append (chat-struct-text struct) "h"))]
+        [(key=? key "j") 
+         (make-chat-struct (string-append (chat-struct-text struct) "j"))]
+        [(key=? key "k") 
+         (make-chat-struct (string-append (chat-struct-text struct) "k"))]
+        [(key=? key "l") 
+         (make-chat-struct (string-append (chat-struct-text struct) "l"))]
+        [(key=? key "z") 
+         (make-chat-struct (string-append (chat-struct-text struct) "z"))]
+        [(key=? key "x") 
+         (make-chat-struct (string-append (chat-struct-text struct) "x"))]
+        [(key=? key "c") 
+         (make-chat-struct (string-append (chat-struct-text struct) "c"))]
+        [(key=? key "v") 
+         (make-chat-struct (string-append (chat-struct-text struct) "v"))]
+        [(key=? key "b") 
+         (make-chat-struct (string-append (chat-struct-text struct) "b"))]
+        [(key=? key "n") 
+         (make-chat-struct (string-append (chat-struct-text struct) "n"))]
+        [(key=? key "m") 
+         (make-chat-struct (string-append (chat-struct-text struct) "m"))]
+        [(key=? key " ") 
+         (make-chat-struct (string-append (chat-struct-text struct) "\n"))]
+        [(key=? key "backspace") 
+         (make-chat-struct (string-append (chat-struct-text struct) "backspace"))]
+        [else struct]))
+
+(define (draw-handler struct)
+  (overlay/align "middle" "middle"
+                 (text (chat-struct-text struct) 20 "black")
+                 (rectangle 500 400 "solid" "white")))
+
+(big-bang chat
+          (on-draw draw-handler)
+          (on-key key-handler))

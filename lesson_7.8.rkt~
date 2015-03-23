@@ -1,0 +1,57 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname lesson_7.8) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ())))
+(require picturing-programs)
+
+;7.8.1
+
+(check-expect (red-function 0 53) 0)
+(check-expect (red-function 50 112) 250)
+(check-expect (red-function 20 40) 100)
+
+(define (red-function x y)
+  (* 5 x))
+
+(check-expect (green-function 39 20) 0)
+(check-expect (green-function 19 50) 0)
+
+(define (green-function x y) 0)
+
+(build3-image 50 50 red-function green-function green-function)
+
+;7.8.2
+
+(check-expect (red-function2 0 50) 0)
+(check-expect (red-function2 25 25) 128)
+
+(define (red-function2 x y) 
+  (min 255 (real->int (* 5.1 x))))
+
+(define (green-function2 x y)
+  0)
+
+(define (blue-function2 x y)
+  (min 255 (real->int (* 5.1 x))))
+
+(build3-image 50 50 red-function2 green-function2 blue-function2)
+
+;7.8.3
+
+(check-expect (rf3 0 0) 255)
+(check-expect (rf3 100 0) 0)
+(check-expect (rf3 50 0) 128)
+
+(define (rf3 x y)
+  (max 255 (* (real->int 2.56) x)))
+
+(check-expect (gf3 0 0) 0)
+(check-expect (gf3 100 100) 255)
+(check-expect (gf3 50 34) 150)
+
+(define (gf3 x y)
+  (min 255 (* (real->int 2.56) x)))
+
+(define (bf3 x y)
+  0)
+
+(build3-image 100 100 rf3 gf3 bf3)

@@ -1,0 +1,57 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname paint-program) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f ())))
+(require picturing-programs)
+
+; paint-struct: struct(cursor) struct(background) image(picture) -> image
+; takes struct information from initial struct and creates image for paint software
+
+; cursor-struct: number(x) number(y) string(color) number(radius)
+; background-struct: number(width) number(height) string(color)
+
+(define-struct paint-struct (cursor background picture))
+(define-struct cursor-struct (x y color radius))
+(define-struct background-struct (width height color))
+
+(define cursor (make-cursor-struct -5 -5 (make-color 0 0 255) 5))
+(define background (make-background-struct 400 400 (make-color 255 255 255)))
+(define picture (rectangle (background-struct-width background)
+                           (background-struct-height background) "solid"
+                           (background-struct-color background)))
+(define paint (make-paint-struct cursor background picture))
+
+; paint-draw-handler: struct(paint) -> image
+
+(define (paint-draw-handler struct)
+  (place-image (circle (cursor-struct-radius (paint-struct-cursor struct))
+                       "solid" (cursor-struct-color (paint-struct-cursor struct)))
+               (cursor-struct-x (paint-struct-cursor struct))
+               (cursor-struct-y (paint-struct-cursor struct))
+               (paint-struct-picture struct)))
+
+; paint-mouse-handler: struct(paint) number(x) number(y) string(event) -> image
+
+(define (paint-mouse-handler struct x y event)
+  (cond [(or (string=? event "enter")
+             (string=? event "move")
+             (string=? event "leave"))
+         (make-paint-struct (make-cursor-struct x y
+                                                (cursor-struct-color (paint-struct-cursor struct))
+                                                (cursor-struct-radius (paint-struct-cursor struct)))
+                            (paint-struct-background struct)
+                            (paint-struct-picture struct))]
+        [(string=? event "drag")
+         (make-paint-struct (make-cursor-struct x y
+                                                (cursor-struct-color (paint-struct-cursor struct))
+                                                (cursor-struct-radius (paint-struct-cursor struct)))
+                            (paint-struct-background struct)
+                            (place-image (circle (cursor-struct-radius (paint-struct-cursor struct))
+                                                 "solid" (cursor-struct-color (paint-struct-cursor struct)))
+                                         x y 
+                                         (paint-struct-picture struct)))]
+        
+        [else struct]))
+
+(big-bang paint
+          (on-draw paint-draw-handler)
+          (on-mouse paint-mouse-handler))

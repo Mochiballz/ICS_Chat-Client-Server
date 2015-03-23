@@ -1,0 +1,14 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname ch23-quiz) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f ())))
+(require picturing-programs)
+
+(define (go-fishing string)
+  (cond [(equal? "t" (first (string->list))) 
+         (append (list "trout") 
+                 (go-fishing (list->string (rest (string->list)))))]
+        [(equal? "w" (first (string->list))) 
+         (append (list "walleye") 
+                 (go-fishing (list->string (rest (string->list)))))]
+        [else
+                 

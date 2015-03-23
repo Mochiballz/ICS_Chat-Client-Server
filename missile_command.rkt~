@@ -1,0 +1,67 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname missile_command) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f ())))
+(require picturing-programs)
+
+; Missle Command - Final Project
+
+; STRUCTS, DEFINITIONS, AND CONSTANTS
+
+; Constants
+; ---
+
+; Background Width And Height
+(define bck-w 1300)
+(define bck-h 700)
+
+; Foreground Height
+(define bck-fh 120)
+
+; Building Coordinates (1-2)
+(define b-c-1 (make-posn (* 1/6 bck-w) 580))
+(define b-c-2 (make-posn (* 2/6 bck-w) 580))
+; Missile Silo Coordinates
+(define ms-c-1 (make-posn (* 1/2 bck-w) 580))
+; Building Coordinates (3-4)
+(define b-c-3 (make-posn (* 4/6 bck-w) 580))
+(define b-c-4 (make-posn (* 5/6 bck-w) 580))
+
+; Building Coordinate List
+(define b-c-list (list b-c-1 b-c-2 ms-c-1 b-c-3 b-c-4))
+
+; GRAPHICS:
+
+; Backgroud 
+(define bck (overlay/align "middle" "bottom" (rectangle bck-w bck-fh "solid" "orange")
+                           (rectangle bck-w bck-h "solid" "black")))
+
+; Buildings
+; ---
+
+; Stable Building
+(define b-s (overlay/align "middle" "bottom" (rectangle 40 40 "solid" "orange")
+                           (above/align "middle" (rectangle 80 20 "solid" "teal")
+                                        (rectangle 120 40 "solid" "teal"))))
+
+; Destroyed Building
+(define b-d (above/align "middle" (rectangle 120 5 "solid" "red")
+                         (crop-top (overlay/align "middle" "bottom" (rectangle 20 40 "solid" "orange")
+                                                  (above/align "middle" (rectangle 80 20 "solid" "teal")
+                                                               (rectangle 120 40 "solid" "teal"))) 50)))
+
+; Missile Silo
+(define ms (overlay/align "middle" "bottom" (beside (rectangle 24 60 "solid" "red")
+                                  (rectangle 24 60 "solid" (make-color 0 0 0 0))
+                                  (rectangle 24 60 "solid" "red")
+                                  (rectangle 24 60 "solid" (make-color 0 0 0 0))
+                                  (rectangle 24 60 "solid" "red"))
+                          (rectangle 120 20 "solid" "teal")))
+
+(define b-i-list (list b-s b-s ms b-s b-s))
+
+; FUNCTIONS:
+
+; ANIMATION:
+
+(big-bang (place-images b-i-list b-c-list bck)
+          (on-draw show-it))

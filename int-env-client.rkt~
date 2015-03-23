@@ -1,0 +1,25 @@
+#lang racket
+
+; INTERACTIVE-ENVIRONMENT: CLIENT
+; dots that move on a plane
+
+(require 2htdp/universe)
+(require 2htdp/image)
+(require rackunit)
+(require picturing-programs)
+(require test-engine/racket-tests)
+
+; DEFINITIONS
+
+(define-struct object (x y act time))
+(define client-element (make-object 0 0 'active 0))
+
+(define DOT (square 2 "solid" "red"))
+(define PLANE (rectangle 800 600 "solid" "blue"))
+
+; FUNCTIONS
+
+; draw-handler: struct(str) -> image
+; takes in 
+(define (draw-handler str)
+  (cond [(

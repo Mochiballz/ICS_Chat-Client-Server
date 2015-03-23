@@ -1,0 +1,6 @@
+#lang racket
+(require racket/base)
+(require racket)
+
+(define frame (new frame% [label "Example"]))
+(send frame show #t)
