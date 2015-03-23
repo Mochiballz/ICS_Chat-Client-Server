@@ -1,1 +1,2 @@
 This is the second test.
+This is a new thing of text.
