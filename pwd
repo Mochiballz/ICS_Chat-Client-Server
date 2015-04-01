@@ -1,0 +1,108 @@
+
+
+(require racket/base)
+(require 2htdp/image)
+(require 2htdp/universe)
+(require picturing-programs)
+(require lang/posn)
+
+;these points change
+(define ips (list
+             (make-posn 200 200) ; inner-point-1
+             (make-posn 400 200) ; inner-point-2
+             (make-posn 200 400) ; inner-point-3
+             (make-posn 400 400) ; inner-point-4
+             ))
+
+;these points are static
+(define ops (list
+             (make-posn 0 0) ; inner-point-1
+             (make-posn 0 200) ; inner-point-2
+             (make-posn 0 400) ; inner-point-3
+             (make-posn 0 600) ; inner-point-4
+             (make-posn 200 600) ; inner-point-5
+             (make-posn 400 600) ; inner-point-6
+             (make-posn 600 600) ; inner-point-7
+             (make-posn 600 400) ; inner-point-8
+             (make-posn 600 200) ; inner-point-9
+             (make-posn 600 0) ; inner-point-10
+             (make-posn 400 0) ; inner-point-11
+             (make-posn 200 0) ; inner-point-12
+             ))
+
+(struct point-container (ipp opp) #:transparent)
+(define mosaic-points (point-container ips ops))
+
+(define (square-1 struct) (polygon (list (list-ref (point-container-opp struct) 0)
+                                (list-ref (point-container-opp struct) 11)
+                                (list-ref (point-container-ipp struct) 0)
+                                (list-ref (point-container-opp struct) 1)) "solid" "red"))
+(define (square-2 struct) (polygon (list (list-ref (point-container-opp struct) 11)
+                                (list-ref (point-container-opp struct) 10)
+                                (list-ref (point-container-ipp struct) 1)
+                                (list-ref (point-container-ipp struct) 0)) "solid" "orange"))
+(define (square-3 struct) (polygon (list (list-ref (point-container-opp struct) 10)
+                                (list-ref (point-container-opp struct) 9)
+                                (list-ref (point-container-opp struct) 8)
+                                (list-ref (point-container-ipp struct) 1)) "solid" "yellow"))
+(define (square-4 struct) (polygon (list (list-ref (point-container-opp struct) 1)
+                                (list-ref (point-container-ipp struct) 0)
+                                (list-ref (point-container-ipp struct) 2)
+                                (list-ref (point-container-opp struct) 2)) "solid" "orange"))
+(define (square-5 struct) (polygon (list (list-ref (point-container-ipp struct) 0)
+                                (list-ref (point-container-ipp struct) 1)
+                                (list-ref (point-container-ipp struct) 3)
+                                (list-ref (point-container-ipp struct) 2)) "solid" "lime"))
+(define (square-6 struct) (polygon (list (list-ref (point-container-ipp struct) 1)
+                                (list-ref (point-container-opp struct) 8)
+                                (list-ref (point-container-opp struct) 7)
+                                (list-ref (point-container-ipp struct) 3)) "solid" "cyan"))
+(define (square-7 struct) (polygon (list (list-ref (point-container-opp struct) 2)
+                                (list-ref (point-container-ipp struct) 2)
+                                (list-ref (point-container-opp struct) 4)
+                                (list-ref (point-container-opp struct) 3)) "solid" "yellow"))
+(define (square-8 struct) (polygon (list (list-ref (point-container-ipp struct) 2)
+                                (list-ref (point-container-ipp struct) 3)
+                                (list-ref (point-container-opp struct) 5)
+                                (list-ref (point-container-opp struct) 4)) "solid" "cyan"))
+(define (square-9 struct) (polygon (list (list-ref (point-container-ipp struct) 3)
+                                (list-ref (point-container-opp struct) 7)
+                                (list-ref (point-container-opp struct) 6)
+                                (list-ref (point-container-opp struct) 5)) "solid" "violet"))
+
+(define (coord-randomizer posn)
+  (make-posn (+ (* 1 (+ -1 (random 3))) (posn-x posn))
+             (+ (* 1 (+ -1 (random 3))) (posn-y posn))))
+
+(define (tick-handler struct)
+  (struct-copy point-container struct [ipp 
+                                     (list (coord-randomizer (list-ref (point-container-ipp struct) 0))
+                                           (coord-randomizer (list-ref (point-container-ipp struct) 1))
+                                           (coord-randomizer (list-ref (point-container-ipp struct) 2))
+                                           (coord-randomizer (list-ref (point-container-ipp struct) 3)))]))
+
+(define (draw-handler struct)
+  (place-images (list (square-1 struct)
+                      (square-2 struct)
+                      (square-3 struct)
+                      (square-4 struct)
+                      (square-5 struct)
+                      (square-6 struct)
+                      (square-7 struct)
+                      (square-8 struct)
+                      (square-9 struct))
+                (list (make-posn 100 100)
+                      (make-posn 300 100)
+                      (make-posn 500 100)
+                      (make-posn 100 300)
+                      (make-posn 300 300)
+                      (make-posn 500 300)
+                      (make-posn 100 500)
+                      (make-posn 300 500)
+                      (make-posn 500 500))
+                (rectange 600 600 "solid" "white")))
+  
+
+(big-bang mosaic-points
+          (on-draw draw-handler)
+          (on-tick tick-handler 0.01))
